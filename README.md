@@ -29,6 +29,7 @@ With the premises explained before, my implementation of the evaluation function
 
 2) Otherwise initializate a variable to 0, sum rewards or penalties according to various criteria and then return the sum.
 
+List of rewards and penalties:
   - The more pieces and kings we have the better: sum +10 for every piece and sum +50 for every king;
   - The more pieces and kings the opponent has the worse: sum -10 for every piece and sum -50 for every king;
   - If a piece is closer to the opposite wall its more likely it will become a king:
@@ -39,7 +40,7 @@ With the premises explained before, my implementation of the evaluation function
       - For opponent: sum -(abs(x_coord - 5) / 5) * 20;
    At the end we return the sum obtained.
    
-With these simple rules the AI have a sort of understanding of how a beginner could play by keeping into account just the number of his pieces and kings and their position in relation to the board. This however does not take into account formations (position of pieces in relation to each other) nor more advanced strategies to force the opponent into a forced eating for example.
+With these simple rules the AI has a sort of understanding of how a beginner could play by keeping into account just the number of his pieces and kings and their position in relation to the board. This however does not take into account formations (position of pieces in relation to each other) nor more advanced strategies (e.g. force the opponent into a forced eating move).
 
 # Contacts:
 If you have any issues and/or questions don't hesitate to contact me at the e-mail address provided below. This was just a fun project and any suggestions to improve the AI will be welcomed as well.
