@@ -30,8 +30,10 @@ With the premises explained before, my implementation of the evaluation function
 1) If a state is a final one, if we win return +1000, if we lose return -1000;
 2) Otherwise initializate a variable to 0, sum rewards or penalties according to various criteria and then return the sum.
 
-**List of rewards (for pieces on our side):**
-<table>
+<p style="float:left;">**List of rewards (for pieces on our side):**</p>
+<p style="floar:"right;">**List of penalties (for pieces on opponent's side):**</p>
+
+<table style="float: left;">
 <tbody>
 <tr>
   <td><b>For every king alive</b></td>
@@ -52,8 +54,7 @@ With the premises explained before, my implementation of the evaluation function
 </tbody>
 </table>
 
-**List of penalties (for pieces on opponent's side):**
-<table>
+<table style="float: right;">
 <tbody>
 <tr>
   <td><b>For every king alive</b></td>
@@ -73,7 +74,6 @@ With the premises explained before, my implementation of the evaluation function
 </tr>
 </tbody>
 </table>
-
    
 With these simple rules the AI has a sort of understanding of how a beginner could play by keeping into account just the number of his pieces and kings and their position in relation to the board. This however does not take into account formations (position of pieces in relation to each other) nor more advanced strategies (e.g. force the opponent into a forced eating move).
 
