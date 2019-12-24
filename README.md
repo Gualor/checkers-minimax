@@ -28,7 +28,6 @@ The second part is critical because the intelligence of our AI relies on the cri
 
 With the premises explained before, my implementation of the evaluation function for checkers works as follows:
 1) If a state is a final one, if we win return +1000, if we lose return -1000;
-
 2) Otherwise initializate a variable to 0, sum rewards or penalties according to various criteria and then return the sum.
 
 **List of rewards (for pieces on our side):**
