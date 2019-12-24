@@ -15,6 +15,8 @@ After all the leafs of the tree have been assigned values, we trace back to each
 
 By repeating this procedure we go back to the initial state with the best score we can get knowing the opponent is smart and trying to counteract our winning strategy to get us the lowest value. Using this decision strategy for every move will bring us (hopefully) to win.
 
+<img align="center" src="images/minimax_ex.png">
+
 # Evaluation function implementation:
 There are 2 critical parts for this algorithm to work properly:
 - Large enough tree's height;
@@ -29,20 +31,59 @@ With the premises explained before, my implementation of the evaluation function
 
 2) Otherwise initializate a variable to 0, sum rewards or penalties according to various criteria and then return the sum.
 
-List of rewards and penalties:
-  - The more pieces and kings we have the better: sum +10 for every piece and sum +50 for every king;
-  - The more pieces and kings the opponent has the worse: sum -10 for every piece and sum -50 for every king;
-  - If a piece is closer to the opposite wall its more likely it will become a king:
-      - For us: sum (y_coord / 10) * 10;
-      - For opponent: sum -((y_coord - 10) / 10) * 10;
-  - If a piece is closer to the side wall it is harder to eat:
-      - For us: sum (abs(5 - x_coord) / 5) * 20;
-      - For opponent: sum -(abs(x_coord - 5) / 5) * 20;
-   At the end we return the sum obtained.
+**List of rewards (for pieces on our side):**
+<table>
+<tbody>
+<tr>
+  <td><b>For every king alive</b></td>
+<td>+100</td>
+</tr>
+<tr>
+<td><b>For every piece alive</b></td>
+<td>+20</td>
+</tr>
+<tr>
+  <td><b>How close to the wall</b></td>
+<td>+(y_coord/10)*10</td>
+</tr>
+<tr>
+  <td><b>How close to the sides</b></td>
+<td>+(1-(0.5/abs(x_coord-5.5)))*20</td>
+</tr>
+</tbody>
+</table>
+
+**List of penalties (for pieces on opponent's side):**
+<table>
+<tbody>
+<tr>
+  <td><b>For every king alive</b></td>
+<td>-100</td>
+</tr>
+<tr>
+<td><b>For every piece alive</b></td>
+<td>-20</td>
+</tr>
+<tr>
+  <td><b>How close to the wall</b></td>
+<td>-((10-y_coord)/10)*10</td>
+</tr>
+<tr>
+  <td><b>How close to the sides</b></td>
+<td>-(1-(0.5/abs(x_coord-5.5)))*20</td>
+</tr>
+</tbody>
+</table>
+
    
 With these simple rules the AI has a sort of understanding of how a beginner could play by keeping into account just the number of his pieces and kings and their position in relation to the board. This however does not take into account formations (position of pieces in relation to each other) nor more advanced strategies (e.g. force the opponent into a forced eating move).
+
 
 # Contacts:
 If you have any issues and/or questions don't hesitate to contact me at the e-mail address provided below. This was just a fun project and any suggestions to improve the AI will be welcomed as well.
 
 lorenzo.gualniera@gmail.com
+
+# Screenshots:
+<img align="left" width="35%" src="images/board0.png">
+<img align="right" width="35%" src="images/board1.png">
