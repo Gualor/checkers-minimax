@@ -30,10 +30,9 @@ With the premises explained before, my implementation of the evaluation function
 1) If a state is a final one, if we win return +1000, if we lose return -1000;
 2) Otherwise initializate a variable to 0, sum rewards or penalties according to various criteria and then return the sum.
 
-<p style="float:left;">**List of rewards (for pieces on our side):**</p>
-<p style="floar:"right;">**List of penalties (for pieces on opponent's side):**</p>
+<p><b>List of rewards (for pieces on our side):</b></p>
 
-<table style="float: left;">
+<table>
 <tbody>
 <tr>
   <td><b>For every king alive</b></td>
@@ -54,7 +53,8 @@ With the premises explained before, my implementation of the evaluation function
 </tbody>
 </table>
 
-<table style="float: right;">
+<p><b>List of penalties (for pieces on opponent's side):</b></p>
+<table>
 <tbody>
 <tr>
   <td><b>For every king alive</b></td>
