@@ -36,19 +36,19 @@ With the premises explained before, my implementation of the evaluation function
 <tbody>
 <tr>
   <td><b>For every king alive</b></td>
-<td>+100</td>
+<td>+ 100</td>
 </tr>
 <tr>
 <td><b>For every piece alive</b></td>
-<td>+20</td>
+<td>+ 20</td>
 </tr>
 <tr>
   <td><b>How close to the wall</b></td>
-<td>+(y_coord/10)*10</td>
+<td>+ (y_coord/10)*10</td>
 </tr>
 <tr>
   <td><b>How close to the sides</b></td>
-<td>+(1-(0.5/abs(x_coord-5.5)))*20</td>
+<td>+ (1-(0.5/abs(x_coord-5.5)))*20</td>
 </tr>
 </tbody>
 </table>
@@ -58,19 +58,19 @@ With the premises explained before, my implementation of the evaluation function
 <tbody>
 <tr>
   <td><b>For every king alive</b></td>
-<td>-100</td>
+<td>- 100</td>
 </tr>
 <tr>
 <td><b>For every piece alive</b></td>
-<td>-20</td>
+<td>- 20</td>
 </tr>
 <tr>
   <td><b>How close to the wall</b></td>
-<td>-((10-y_coord)/10)*10</td>
+<td>- ((10-y_coord)/10)*10</td>
 </tr>
 <tr>
   <td><b>How close to the sides</b></td>
-<td>-(1-(0.5/abs(x_coord-5.5)))*20</td>
+<td>- (1-(0.5/abs(x_coord-5.5)))*20</td>
 </tr>
 </tbody>
 </table>
