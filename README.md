@@ -1,12 +1,12 @@
-# checker-minimax
-AI for Checkers using Minimax algorithm.
+# checkers-minimax
+AI for checkers using minimax algorithm.
 
-In this project the popular board game of Checkers has been designed and implemented by using the Pygame framework. The game follows the rules of International Draughts, which is played on a 10x10 checkerboard. The Artifial Intelligence (AI) implemented in the opponent uses the classic Minimax algorithm with a custom evaluation function in which the game board is evaluated with a score. The evaluation function is the core of the algorithm and the better is designed, the more intelligent the AI will be, and consequently harder to beat.
+In this project the popular board game of *Checkers* has been designed and implemented by using the Pygame framework. The game follows the rules of International Draughts, which is played on a 10x10 checkerboard. The Artifial Intelligence (AI) implemented in the opponent uses the classic Minimax algorithm with a custom evaluation function in which the game board is evaluated with a score. The evaluation function is the core of the algorithm and the better is designed, the more intelligent the AI will be, and consequently harder to beat.
 
-# Aim of the project:
+## Aim of the project:
 The aim of the project was not to create the perfect AI, but rather to investigate how powerful this algorithm can be in a popular 2 players game with an average knowledge of its strategies and tacticts. The minimax algorithm at the current stage has been proposed in its raw form without Alpha-Beta pruning. Regarding the evaluation function, all the criteria and metrics implemented follow my judgement and understanding of the game, no ispiration from other projects was taken in order to be more challenging for myself.
 
-# Minimax algorithm explanation:
+## Minimax algorithm explanation:
 The main concept around which the minimax algorithm gravitates, is the assumption of facing an intelligent opponent who is always playing in his interest. Starting on our turn we build the decision tree, every branch corresponds to a move that we make that leads to a different state (i.e. a different game board configuration). On the opponent's turn, from each of the states that we develop, new branches are created, one for every possible opponent's move, and so on. 
 
 Given a fixed height of the tree (i.e. number of moves we want to look ahead), we now want to assign a value to each node, representing the score that the player, playing at that turn, is getting. Starting from the bottom of the tree (and supposing its our turn) by means of an evaluation function we assign to the board state we are considering a value, which can be positive (good for us) of negative (bad for us). 
@@ -17,7 +17,7 @@ By repeating this procedure we go back to the initial state with the best score 
 
 <img align="center" src="images/minimax_ex.png">
 
-# Evaluation function implementation:
+## Evaluation function implementation:
 There are 2 critical parts for this algorithm to work properly:
 - Large enough tree's height;
 - Well thought and designed evaluation function;
@@ -78,11 +78,11 @@ With the premises explained before, my implementation of the evaluation function
 With these simple rules the AI has a sort of understanding of how a beginner could play by keeping into account just the number of his pieces and kings and their position in relation to the board. This however does not take into account formations (position of pieces in relation to each other) nor more advanced strategies (e.g. force the opponent into a forced eating move).
 
 
-# Contacts:
+## Contacts:
 If you have any issues and/or questions don't hesitate to contact me at the e-mail address provided below. This was just a fun project and any suggestions to improve the AI will be welcomed as well.
 
 lorenzo.gualniera@gmail.com
 
-# Screenshots:
+## Screenshots:
 <img align="left" width="35%" src="images/board0.png">
 <img align="right" width="35%" src="images/board1.png">
