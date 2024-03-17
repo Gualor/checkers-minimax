@@ -39,30 +39,36 @@ class CheckerBoard:
 
 
 class Player:
+    N_MEN: int = 15
+    N_KING: int = 5
+
     def __init__(self, num) -> None:
-        self.n_men = 15
-        self.n_kings = 0
+        self.n_men = Player.N_MEN
+        self.n_kings = Player.N_KING
         self.n_eaten = 0
         self.ply = num
         self.init_pos()
 
     def init_pos(self) -> None:
         self.pos_pieces = np.zeros(shape=(10, 10), dtype=int)
-        if self.ply == 1:
-            for i in range(3):
-                for j in range(0, 10, 2):
-                    if i in [0, 2]:
-                        self.pos_pieces[i, j] = 1
-                    elif i == 1:
-                        self.pos_pieces[i, j + 1] = 1
-        if self.ply == 2:
-            for i in range(3):
-                for j in range(0, 10, 2):
-                    if i in [0, 2]:
-                        self.pos_pieces[9 - i, j + 1] = 1
-                    elif i == 1:
-                        self.pos_pieces[9 - i, j] = 1
-        self.pos_pieces = self.pos_pieces.transpose()
+        tot_pieces = self.n_men + self.n_kings
+        n_men = 0
+        n_kings = 0
+        for y1 in range(tot_pieces // 5):
+            for x in range(0, 10, 2):
+                if n_men < self.n_men:
+                    n_men += 1
+                    val = 1
+                elif n_kings < self.n_kings:
+                    n_kings += 1
+                    val = 2
+                else:
+                    return
+                if self.ply == 1:
+                    self.pos_pieces[x + (y1 % 2), y1] = val
+                elif self.ply == 2:
+                    y2 = 9 - y1
+                    self.pos_pieces[x + (y2 % 2), y2] = val
 
     def move(
         self, selected: PosType, moveto: PosType, board: BoardType
