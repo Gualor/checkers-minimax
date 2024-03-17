@@ -3,6 +3,7 @@ import random
 
 from checkers import BoardType, MoveType
 
+
 class Minimax:
     PIECE_VAL = 10
     KING_VAL = 50
@@ -14,48 +15,38 @@ class Minimax:
 
     def find_moves(self, board: BoardType) -> List[MoveType]:
         moves = []
-        for i in range(10):
-            for j in range(10):
-                if board[i][j] == 0:
+        for (i, j) in [(i, j) for i in range(10) for j in range(10)]:
+            if not isinstance(board[i][j], tuple):
+                continue
+            ply_str, ply_val = board[i][j]
+            if not ply_str == f"ply{self.ply}":
+                continue
+            for k, h in [(x, y) for x in [-1, 1] for y in [-1, 1]]:
+                if (
+                    (i + k < 0) or (i + k >= 10) or
+                    (j + h < 0) or (j + h >= 10)
+                ):
                     continue
-                ply_str, ply_val = board[i][j]
-                if ply_str != f"ply{self.ply}":
-                    continue
-                for k, h in [(x, y) for x in [-1, 1] for y in [-1, 1]]:
+                if (
+                    (ply_val == 2) or
+                    ((h > 0) and (self.ply == 1)) or
+                    ((h < 0) and (self.ply == 2))
+                ):
+                    if board[i + k][j + h] == 0:
+                        moves.append(((i, j), (i + k, j + h)))
+                        continue
+                    dst_str, _ = board[i + k][j + h]
+                    if dst_str == f"ply{self.ply}":
+                        continue
                     if (
-                        (i + k < 0) or (i + k >= 10) or
-                        (j + h < 0) or (j + h >= 10)
+                        (i + 2 * k < 0) or (i + 2 * k >= 10) or
+                        (j + 2 * h < 0) or (j + 2 * h >= 10)
                     ):
                         continue
-                    dst_str, dst_val = board[i + k][j + h]
-                    if self.ply == 1:
-                        if (ply_val == 2) or (h > 0):
-                            if dst_val == 0:
-                                moves.append(((i, j), (i + k, j + h)))
-                            elif dst_str != f"ply{self.ply}":
-                                if (
-                                    (i + 2 * k < 0) or (i + 2 * k >= 10) or
-                                    (j + 2 * h < 0) or (j + 2 * h >= 10)
-                                ):
-                                    continue
-                                if board[i + 2 * k][j + 2 * h] == 0:
-                                    moves.append(
-                                        ((i, j), (i + 2 * k, j + 2 * h))
-                                    )
-                    elif self.ply == 2:
-                        if (ply_val == 2) or (h < 0):
-                            if board[i + k][j + h] == 0:
-                                moves.append(((i, j), (i + k, j + h)))
-                            elif dst_str != f"ply{self.ply}":
-                                if (
-                                    (i + 2 * k < 0) or (i + 2 * k >= 10) or
-                                    (j + 2 * h < 0) or (j + 2 * h >= 10)
-                                ):
-                                    continue
-                                if board[i + 2 * k][j + 2 * h] == 0:
-                                    moves.append(
-                                        ((i, j), (i + 2 * k, j + 2 * h))
-                                    )
+                    if board[i + 2 * k][j + 2 * h] == 0:
+                        moves.append(
+                            ((i, j), (i + 2 * k, j + 2 * h))
+                        )
         random.shuffle(moves)
         return moves
 
@@ -63,33 +54,32 @@ class Minimax:
         value = 0
         n1 = 0
         n2 = 0
-        for i in range(10):
-            for j in range(10):
-                if board[i][j] == 0:
-                    continue
-                ply_str, ply_val = board[i][j]
-                if ply_str == f"ply{self.ply}":
-                    n1 += 1
-                    if i < 5:
-                        value += int(1 / (i + 1)) * Minimax.SIDE_VAL
-                    else:
-                        value += int(1 / (abs(i - 10))) * Minimax.SIDE_VAL
-                    value += int((j + 1) / 10) * Minimax.WALL_VAL
-                    if ply_val == 1:
-                        value += Minimax.PIECE_VAL
-                    elif ply_val == 2:
-                        value += Minimax.KING_VAL
+        for (i, j) in [(i, j) for i in range(10) for j in range(10)]:
+            if not isinstance(board[i][j], tuple):
+                continue
+            ply_str, ply_val = board[i][j]
+            if ply_str == f"ply{self.ply}":
+                n1 += 1
+                if i < 5:
+                    value += int(1 / (i + 1)) * Minimax.SIDE_VAL
                 else:
-                    n2 += 1
-                    if i < 5:
-                        value -= int(1 / (i + 1)) * Minimax.SIDE_VAL
-                    else:
-                        value -= int(1 / (abs(i - 10))) * Minimax.SIDE_VAL
-                    value -= int(abs(j - 10) / 10) * Minimax.WALL_VAL
-                    if ply_val == 1:
-                        value -= Minimax.PIECE_VAL
-                    elif ply_val == 2:
-                        value -= Minimax.KING_VAL
+                    value += int(1 / (abs(i - 10))) * Minimax.SIDE_VAL
+                value += int((j + 1) / 10) * Minimax.WALL_VAL
+                if ply_val == 1:
+                    value += Minimax.PIECE_VAL
+                elif ply_val == 2:
+                    value += Minimax.KING_VAL
+            else:
+                n2 += 1
+                if i < 5:
+                    value -= int(1 / (i + 1)) * Minimax.SIDE_VAL
+                else:
+                    value -= int(1 / (abs(i - 10))) * Minimax.SIDE_VAL
+                value -= int(abs(j - 10) / 10) * Minimax.WALL_VAL
+                if ply_val == 1:
+                    value -= Minimax.PIECE_VAL
+                elif ply_val == 2:
+                    value -= Minimax.KING_VAL
         if n2 == 0 and n1 > 0:
             value = 10000
         elif n1 == 0 and n2 > 0:

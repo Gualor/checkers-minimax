@@ -16,13 +16,13 @@ class CheckerBoard:
         board_str = "Gameboard:\n"
         for i in range(10):
             for j in range(10):
-                if self.board[i][j] == 0:
-                    board_str += "0"
-                else:
+                if isinstance(self.board[i][j], tuple):
                     ply_str, ply_val = self.board[i][j]
                     if ply_str == "ply2":
                         ply_val += 2
                     board_str += str(ply_val)
+                else:
+                    board_str += "0"
                 board_str += " "
             board_str += "\n"
         return board_str
