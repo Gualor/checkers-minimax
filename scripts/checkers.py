@@ -1,4 +1,4 @@
-from typing import Tuple, Union, List
+from typing import Tuple, Union, List, Optional
 import numpy as np
 
 
@@ -40,11 +40,16 @@ class CheckerBoard:
 
 class Player:
     N_MEN: int = 15
-    N_KING: int = 5
+    N_KING: int = 0
 
-    def __init__(self, num) -> None:
-        self.n_men = Player.N_MEN
-        self.n_kings = Player.N_KING
+    def __init__(
+        self,
+        num: int,
+        n_men: Optional[int] = None,
+        n_kings: Optional[int] = None,
+    ) -> None:
+        self.n_men = Player.N_MEN if n_men is None else n_men
+        self.n_kings = Player.N_KING if n_kings is None else n_kings
         self.n_eaten = 0
         self.ply = num
         self.init_pos()
