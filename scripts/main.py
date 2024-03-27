@@ -106,6 +106,8 @@ def select_piece(
 
 
 def switch_turn(board: BoardType, turn: int, sel: PosType) -> int:
+    print("SWITCH TURN")
+    print("Board:",board)
     if board[sel[0]][sel[1]] == 0:
         return turn
     _, ply_val = board[sel[0]][sel[1]]
@@ -128,6 +130,7 @@ def switch_turn(board: BoardType, turn: int, sel: PosType) -> int:
                     near_enemy[-1][0] + dir_enemy[-1][0],
                     near_enemy[-1][1] + dir_enemy[-1][1],
                 )
+                print("Newpos0=",newpos[0],"Newpos1=",newpos[1])
                 if (
                     (newpos[0] < 0) or (newpos[0] >= 10) or
                     (newpos[1] < 0) or (newpos[1] >= 10)
@@ -180,6 +183,13 @@ def copy_board(board: BoardType) -> BoardType:
 def clear() -> None:
     os.system("cls")
 
+def modify_array(arr, subscript, check):
+    for i in range(len(arr)):
+        for j in range(len(arr[i])):
+            if (i,j) != subscript and arr[i][j] != 0:
+                if arr[i][j][0] == check:
+                    arr[i][j] = 0
+    return arr
 
 def print_score(ply1: Player, ply2: Player) -> None:
     score_str = ""
@@ -232,16 +242,17 @@ if __name__ == "__main__":
             draw_selected(surface, selected, player)
 
         # detect mouse event
-        for event in pygame.event.get():
+        for event in pygame.event.get(): # Iterate through all events detected, this line will be ran infinitely until an event such as mouseclick
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if selected:
                     tmp = select_piece(player, selected, moveto, event)
                     if tmp != selected:
-                        moveto = tmp
+                        moveto = tmp #selected not none, move from selected to new square
                 else:
                     selected = select_piece(player, selected, moveto, event)
+                    movedfrom = selected
 
-        # AI's turn
+        #AI's turn
         if player == player1:
             board = copy_board(gameboard.board)
             try:
@@ -250,25 +261,25 @@ if __name__ == "__main__":
             except TypeError:
                 selected = None
                 moveto = None
-
-        # move piece
+        #move piece
         if moveto is not None:
             if player == player1:
+                check = "ply1"
                 tmp = player1.move(selected, moveto, gameboard.board)
                 player2.update_dead(tmp)
             else:
+                check = "ply2"
                 tmp = player2.move(selected, moveto, gameboard.board)
                 player1.update_dead(tmp)
 
             # update the position of the player's pieces
             gameboard.update_board(player1.pos_pieces, player2.pos_pieces)
-
+            print(gameboard.board)
             if tmp is not False:
-                clear()
+                #clear()
                 old_turn = turn
-                if isinstance(tmp, tuple):
-                    turn = switch_turn(gameboard.board, turn, moveto)
-                else:
+                
+                if not(isinstance(tmp, tuple) and player.has_forced_moves(gameboard.board)):
                     turn = 1 if (turn == 2) else 2
                 if old_turn != turn:
                     print(f"Player{turn}'s turn\n. . . . . . . .")
