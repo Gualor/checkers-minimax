@@ -183,12 +183,12 @@ def copy_board(board: BoardType) -> BoardType:
 def clear() -> None:
     os.system("cls")
 
-def modify_array(arr, subscript, check):
-    for i in range(len(arr)):
-        for j in range(len(arr[i])):
-            if (i,j) != subscript and arr[i][j] != 0:
-                if arr[i][j][0] == check:
-                    arr[i][j] = 0
+def modify_array(arr: BoardType, subscript:tuple[int,int], check: str) -> BoardType: # function to change the board such that it leaves only the counter that just moved and the opposing pieces
+    for i in range(len(arr)): # for each column
+        for j in range(len(arr[i])): # for each row position in that column
+            if (i,j) != subscript and arr[i][j] != 0: # if this square is not the square selected counter has just moved to and the square is not already empty
+                if arr[i][j][0] == check: #if the found piece in selected square is the same colour as the counter that just moved
+                    arr[i][j] = 0 #set  this square to empty
     return arr
 
 def print_score(ply1: Player, ply2: Player) -> None:
@@ -227,6 +227,7 @@ if __name__ == "__main__":
 
     selected = None
     moveto = None
+    movedfrom = None
     turn = random.choice([1, 2])
 
     print_score(player1, player2)
@@ -263,6 +264,7 @@ if __name__ == "__main__":
                 moveto = None
         #move piece
         if moveto is not None:
+            print("before updated, forced=",player.check_forced_move(gameboard.board))
             if player == player1:
                 check = "ply1"
                 tmp = player1.move(selected, moveto, gameboard.board)
@@ -274,12 +276,15 @@ if __name__ == "__main__":
 
             # update the position of the player's pieces
             gameboard.update_board(player1.pos_pieces, player2.pos_pieces)
-            print(gameboard.board)
+            print("after updated, forced=",player.check_forced_move(gameboard.board))
             if tmp is not False:
+                print("tmp true")
                 #clear()
                 old_turn = turn
-                
+                print("movefrom:",movedfrom)
+                print("moveto:",moveto)
                 if not(isinstance(tmp, tuple) and player.has_forced_moves(gameboard.board)):
+                    print("SWITCHING")
                     turn = 1 if (turn == 2) else 2
                 if old_turn != turn:
                     print(f"Player{turn}'s turn\n. . . . . . . .")
