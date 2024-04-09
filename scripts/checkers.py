@@ -76,7 +76,7 @@ class Player:
                     self.pos_pieces[x + (y2 % 2), y2] = val
 
     def move(
-        self, selected: PosType, moveto: PosType, board: BoardType
+        self, selected: PosType, moveto: PosType, board: BoardType, taken: bool, lastmove: PosType,movedfrom: PosType
     ) -> bool:
         moves = self.check_forced_move(board)
         if ((selected, moveto) in moves) or (len(moves) == 0):
@@ -95,6 +95,8 @@ class Player:
                     return True
                 return False
             else:
+                if taken == True and lastmove != movedfrom:
+                    return False
                 # valid eating move
                 self.n_eaten = self.n_eaten + 1
                 # update position from selected to moveto
