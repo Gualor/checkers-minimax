@@ -8,7 +8,6 @@ from pygame.event import EventType
 from checkers import CheckerBoard, Player, PosType, BoardType
 from minimax import Minimax
 
-
 WIN_SIZE = (WIDTH, HEIGHT) = (600, 600)
 TILE_SIZE = (WIN_SIZE[0] // 10, WIN_SIZE[1] // 10)
 BLACK = (0, 0, 0)
@@ -251,46 +250,62 @@ if __name__ == "__main__":
                     movedfrom = selected
 
         #AI's turn
-        if player == player1:
-            board = copy_board(gameboard.board)
-            try:
-                _, ai_move = ai.minimax(board, 100, True)
-                selected, moveto = ai_move
-            except TypeError:
-                selected = None
-                moveto = None
+        # if player == player1:
+        #     board = copy_board(gameboard.board)
+        #     try:
+        #         _, ai_move = ai.minimax(board, 100, True)
+        #         selected, moveto = ai_move
+        #     except TypeError:
+        #         selected = None
+        #         moveto = None
         #move piece
         
         if moveto is not None:
+            print("START TURN,Taken =",taken)
+
             if player == player1:
                 check = "ply1"
-                tmp = player1.move(selected, moveto, gameboard.board,taken,lastmove,movedfrom)
+                tmp = player1.move(selected, moveto, gameboard.board)
                 player2.update_dead(tmp)
             else:
                 check = "ply2"
-                tmp = player2.move(selected, moveto, gameboard.board,taken,lastmove,movedfrom)
+                tmp = player2.move(selected, moveto, gameboard.board)
                 player1.update_dead(tmp)
 
             # update the position of the player's pieces
-            forced_moves_before = player.check_forced_move(gameboard.board)
             gameboard.update_board(player1.pos_pieces, player2.pos_pieces)
             if tmp is not False:
-                taken = True if abs(movedfrom[0]-moveto[0]) == 2 else False
-                clear()
+                #clear()
                 old_turn = turn
-                turn = 1 if (turn == 2) else 2
-                if isinstance(tmp, tuple) and player.has_forced_moves(gameboard.board):
-                    for move in forced_moves_before:
-                        if move[0] == moveto:
-                            turn = old_turn
-                            break
-                taken = False if turn != old_turn else taken
+                if not(isinstance(tmp, tuple) and player.has_forced_moves(gameboard.board)):
+                    print("SWITCHING")
+                    taken = False
+                    turn = 1 if (turn == 2) else 2
+                else:
+                    print("cont moving")
+                    print("taken=",taken)
+                    if taken == True:
+                        print("prev taken piece")
+                        print("lastmove =",lastmove)
+                        turn = 1 if (turn == 2) else 2
+                        for move in player.check_forced_move(gameboard.board):
+                            print("move0",move[0])
+                            if move[0] == lastmove:
+                                turn = old_turn
+                                print("change turn to",turn)
+                                break
+                    print("turn=",turn)
+                    print("oldturn=",old_turn)
+                    if turn == old_turn:
+                        taken = True
+                    else:
+                        taken = False
                 if old_turn != turn:
                     print(f"Player{turn}'s turn\n. . . . . . . .")
                     old_turn = turn
                 print_score(player1, player2)
-
                 lastmove = moveto
+                print("endofturn,taken = ",taken)
 
             moveto = None
             selected = None
