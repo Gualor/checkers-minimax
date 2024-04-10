@@ -183,13 +183,6 @@ def copy_board(board: BoardType) -> BoardType:
 def clear() -> None:
     os.system("cls")
 
-def modify_array(arr, subscript, check):
-    for i in range(len(arr)):
-        for j in range(len(arr[i])):
-            if (i,j) != subscript and arr[i][j] != 0:
-                if arr[i][j][0] == check:
-                    arr[i][j] = 0
-    return arr
 
 def print_score(ply1: Player, ply2: Player) -> None:
     score_str = ""
@@ -242,17 +235,19 @@ if __name__ == "__main__":
             draw_selected(surface, selected, player)
 
         # detect mouse event
-        for event in pygame.event.get(): # Iterate through all events detected, this line will be ran infinitely until an event such as mouseclick
+        for event in pygame.event.get():
             if event.type == pygame.MOUSEBUTTONDOWN:
+                print("selected before",selected)
                 if selected:
                     tmp = select_piece(player, selected, moveto, event)
                     if tmp != selected:
                         moveto = tmp #selected not none, move from selected to new square
+                        print("move to:",moveto)
                 else:
                     selected = select_piece(player, selected, moveto, event)
-                    movedfrom = selected
+                print("selected after:",selected)
 
-        #AI's turn
+        # AI's turn
         if player == player1:
             board = copy_board(gameboard.board)
             try:
@@ -261,24 +256,25 @@ if __name__ == "__main__":
             except TypeError:
                 selected = None
                 moveto = None
-        #move piece
+        # move piece
         if moveto is not None:
             if player == player1:
-                check = "ply1"
                 tmp = player1.move(selected, moveto, gameboard.board)
                 player2.update_dead(tmp)
+                print("p1 move")
+                print("tmp=",tmp)
             else:
-                check = "ply2"
                 tmp = player2.move(selected, moveto, gameboard.board)
                 player1.update_dead(tmp)
+                print("p2 move")
+                print("tmp=",tmp)
 
             # update the position of the player's pieces
             gameboard.update_board(player1.pos_pieces, player2.pos_pieces)
-            print(gameboard.board)
+            print("board update")
             if tmp is not False:
                 #clear()
                 old_turn = turn
-                
                 if not(isinstance(tmp, tuple) and player.has_forced_moves(gameboard.board)):
                     turn = 1 if (turn == 2) else 2
                 if old_turn != turn:
