@@ -127,10 +127,7 @@ class Player:
                         if self.check_eating_move(selected, moveto, board):
                             moves.append((selected, moveto))
         return moves
-    
-    def has_forced_moves(self, board: BoardType) -> bool:
-        return len(self.check_forced_move(board)) > 0
-    
+
     def check_eating_move(
         self, selected: PosType, moveto: PosType, board: BoardType
     ) -> Union[bool, PosType]:
