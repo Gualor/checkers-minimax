@@ -197,36 +197,36 @@ if __name__ == "__main__": # Code begins running here
         
         if moveto is not None: # Due to while True loop, will run over and over -  Waits till moveto != None
             if player == player1:
-                check = "ply1"
-                tmp = player1.move(selected, moveto, gameboard.board,taken,lastmove,movedfrom)
-                player2.update_dead(tmp)
+                check = "ply1" # Player 1s Turn
+                tmp = player1.move(selected, moveto, gameboard.board,taken,lastmove,movedfrom) # Returns information about the move performed
+                player2.update_dead(tmp) # Handles if move performed involved capturing
             else:
-                check = "ply2"
-                tmp = player2.move(selected, moveto, gameboard.board,taken,lastmove,movedfrom)
-                player1.update_dead(tmp)
+                check = "ply2" # Player 2s Turn
+                tmp = player2.move(selected, moveto, gameboard.board,taken,lastmove,movedfrom) # Returns information about the move performed
+                player1.update_dead(tmp) # Handles if move performed involved capturing
 
             # update the position of the player's pieces
-            forced_moves_before = player.check_forced_move(gameboard.board) 
-            gameboard.update_board(player1.pos_pieces, player2.pos_pieces)
-            if tmp is not False:
-                taken = True if abs(movedfrom[0]-moveto[0]) == 2 else False
-                clear()
-                old_turn = turn
-                turn = 1 if (turn == 2) else 2
-                if isinstance(tmp, tuple) and player.has_forced_moves(gameboard.board):
-                    for move in forced_moves_before:
-                        if move[0] == moveto:
-                            turn = old_turn
+            forced_moves_before = player.check_forced_move(gameboard.board) # Track if player has any forced move before the move is officially made
+            gameboard.update_board(player1.pos_pieces, player2.pos_pieces) # Update the state of the board after player has made a move
+            if tmp is not False: # If the move made is a valid move
+                taken = True if abs(movedfrom[0]-moveto[0]) == 2 else False # Notes that player made a capture if the moved counter moved a distance of 2 squares horizontally or vertically 
+                clear() # Clears terminal 
+                old_turn = turn # Changes old_turn to turn now that the player has moved
+                turn = 1 if (turn == 2) else 2 # Switch Turn
+                if isinstance(tmp, tuple) and player.has_forced_moves(gameboard.board): # If tmp is a co-ordinate and the sane player has forced moves after making a move
+                    for move in forced_moves_before: #  for every forced move availible
+                        if move[0] == moveto: # if the forced move is the desired square player is moving to
+                            turn = old_turn # Player keeps on moving
                             break
-                taken = False if turn != old_turn else taken
+                taken = False if turn != old_turn else taken # Reset taken to False if the turn has been switched
                 if old_turn != turn:
                     print(f"Player{turn}'s turn\n. . . . . . . .")
                     old_turn = turn
                 print_score(player1, player2)
 
-                lastmove = moveto
+                lastmove = moveto # The last move made is set as where the player just moved to
 
             moveto = None
-            selected = None
+            selected = None # New turn so set moveto and selected as None
 
         pygame.display.flip()
