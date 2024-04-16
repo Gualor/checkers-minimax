@@ -5,12 +5,12 @@ import numpy as np
 PosType = Tuple[int, int]
 BoardElemType = Union[int, Tuple[str, int]]
 BoardType = List[List[BoardElemType]]
-MoveType = Tuple[PosType, PosType]
+MoveType = Tuple[PosType, PosType] # Set variable types
 
 
 class CheckerBoard:
     def __init__(self) -> None:
-        self.board: BoardType = [[0 for _ in range(10)] for _ in range(10)]
+        self.board: BoardType = [[0 for _ in range(10)] for _ in range(10)] # Initialised the board as a 10 x 10 grid with each cell empty
 
     def __str__(self) -> str:
         board_str = "Gameboard:\n"
@@ -25,14 +25,14 @@ class CheckerBoard:
                     board_str += "0"
                 board_str += " "
             board_str += "\n"
-        return board_str
+        return board_str #Returns the board as a string representation
 
     def update_board(self, ply1: np.ndarray, ply2: np.ndarray) -> None:
         for i in range(10):
-            for j in range(10):
-                if ply1[i][j] > 0:
+            for j in range(10): # For each square
+                if ply1[i][j] > 0: # If player 1 counter at square
                     self.board[i][j] = ("ply1", ply1[i][j])
-                elif ply2[i][j] > 0:
+                elif ply2[i][j] > 0: # If player 2 counter at square
                     self.board[i][j] = ("ply2", ply2[i][j])
                 else:
                     self.board[i][j] = 0
