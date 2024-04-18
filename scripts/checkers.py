@@ -76,7 +76,7 @@ class Player:
                     self.pos_pieces[x + (y2 % 2), y2] = val
 
     def move(
-        self, selected: PosType, moveto: PosType, board: BoardType, taken: bool, lastmove: PosType,movedfrom: PosType
+        self, selected: PosType, moveto: PosType, board: BoardType, taken: bool, lastmove: PosType,movedfrom: PosType, makemove: bool
     ) -> bool:
         moves = self.check_forced_move(board) # Check if there are any forced moves availible
         if ((selected, moveto) in moves) or (len(moves) == 0): 
@@ -85,6 +85,23 @@ class Player:
                 # moves without eating pieces
                 if self.check_valid_move(selected, moveto, board):
                     # update position from selected to moveto
+                    if makemove:
+                        self.pos_pieces[moveto] = self.pos_pieces[selected]
+                        self.pos_pieces[selected] = 0
+                        # kings promotion
+                        if self.ply == 1 and moveto[1] == 9:
+                            self.promote_king(moveto)
+                        elif self.ply == 2 and moveto[1] == 0:
+                            self.promote_king(moveto)
+                    return True
+                return False
+            else:
+                if taken == True and lastmove != movedfrom: # Added by James
+                    return False # Return invalid move if the eating move is not made by the previously moved piece, given that piece ate on the previous move
+                # valid eating move
+                if makemove:
+                    self.n_eaten = self.n_eaten + 1
+                    # update position from selected to moveto
                     self.pos_pieces[moveto] = self.pos_pieces[selected]
                     self.pos_pieces[selected] = 0
                     # kings promotion
@@ -92,21 +109,6 @@ class Player:
                         self.promote_king(moveto)
                     elif self.ply == 2 and moveto[1] == 0:
                         self.promote_king(moveto)
-                    return True
-                return False
-            else:
-                if taken == True and lastmove != movedfrom: # Added by James
-                    return False # Return invalid move if the eating move is not made by the previously moved piece, given that piece ate on the previous move
-                # valid eating move
-                self.n_eaten = self.n_eaten + 1
-                # update position from selected to moveto
-                self.pos_pieces[moveto] = self.pos_pieces[selected]
-                self.pos_pieces[selected] = 0
-                # kings promotion
-                if self.ply == 1 and moveto[1] == 9:
-                    self.promote_king(moveto)
-                elif self.ply == 2 and moveto[1] == 0:
-                    self.promote_king(moveto)
                 return dead
         else:
             return False
