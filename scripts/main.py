@@ -8,6 +8,7 @@ from pygame.event import EventType
 from checkers import CheckerBoard, Player, PosType, BoardType
 from minimax import Minimax
 
+
 # Defining window size and colours used for the game
 WIN_SIZE = (WIDTH, HEIGHT) = (600, 600)
 TILE_SIZE = (WIN_SIZE[0] // 10, WIN_SIZE[1] // 10)
@@ -15,6 +16,7 @@ BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 ORANGE = (255, 156, 0)
 BLUE = (1, 212, 180)
+GRAY = (127, 127, 127)
 BOARD_COLOR = [WHITE, BLACK]
 PLAYER_COLOR = [ORANGE, BLUE]
 
@@ -37,18 +39,18 @@ def draw_board(surface: pygame.Surface, turn: int) -> None:
 
 
 def draw_selected(
-    surface: pygame.Surface, posgrid: PosType, player: Player
+    surface: pygame.Surface, posgrid: PosType, color : str
 ) -> None:
-    if player.pos_pieces[posgrid]: #If there is a piece belonging to the current player at chosen square
-        pygame.draw.rect(
-            surface,
-            PLAYER_COLOR[player.ply-1],
-            (
-                posgrid[0] * TILE_SIZE[0], posgrid[1] * TILE_SIZE[1],
-                TILE_SIZE[0], TILE_SIZE[1],
-            ),
-            3
-        ) # Draw rectangle outline around the square to show it has been selected
+    # Draw rectangle outline around the square to show it has been selected
+    pygame.draw.rect(
+        surface,
+        color,
+        (
+            posgrid[0] * TILE_SIZE[0], posgrid[1] * TILE_SIZE[1],
+            TILE_SIZE[0], TILE_SIZE[1],
+        ),
+        3
+    )
 
 
 def draw_player(surface: pygame.Surface, player: Player) -> None:
@@ -106,7 +108,6 @@ def select_piece(
     return False
 
 
-
 def copy_board(board: BoardType) -> BoardType:
     copy: BoardType = [[0 for _ in range(10)] for _ in range(10)] # Initializes a new 10 x 10 matrix with 0s
     for i in range(10):
@@ -117,7 +118,6 @@ def copy_board(board: BoardType) -> BoardType:
 
 def clear() -> None:
     os.system("cls") # Clear the contents of the terminal
-
 
 
 def print_score(ply1: Player, ply2: Player) -> None:
@@ -150,6 +150,7 @@ if __name__ == "__main__": # Code begins running here
     ai = Minimax(ply_num=1) # Creates instance of the Minimax class, representing the AI player
 
     gameboard.update_board(player1.pos_pieces, player2.pos_pieces) # Update the board with required graphics such as pieces
+    board = gameboard.board
 
     clear() # Clear terminal
     print(gameboard) # Print the current gameboard
@@ -170,8 +171,12 @@ if __name__ == "__main__": # Code begins running here
         draw_player(surface, player2) # Draw the pieces of Player 2 on the Pygame surface
         player = player1 if (turn == 1) else player2 # Switch the turn/ Switch the next player to move
 
-        if selected: # If a square has been selected by a mouse click
-            draw_selected(surface, selected, player) # Draw an outline around selected square
+        if selected and player.pos_pieces[selected]: #If there is a piece belonging to the current player at chosen square and a square has been selected by a mouse click
+            draw_selected(surface, selected, PLAYER_COLOR[player.ply-1]) # Draw an outline around selected square
+            for i in range(0,10):
+                for j in range(0,10):
+                    if player2.move(selected, (i,j), gameboard.board,taken,lastmove,movedfrom,False):
+                        draw_selected(surface,(i,j),GRAY)
 
         # detect mouse event
         for event in pygame.event.get(): # Iterate through all events detected, this line will be ran infinitely until an event such as mouseclick
@@ -198,11 +203,11 @@ if __name__ == "__main__": # Code begins running here
         if moveto is not None: # Due to while True loop, will run over and over -  Waits till moveto != None
             if player == player1:
                 check = "ply1" # Player 1s Turn
-                tmp = player1.move(selected, moveto, gameboard.board,taken,lastmove,movedfrom) # Returns information about the move performed
+                tmp = player1.move(selected, moveto, gameboard.board,taken,lastmove,movedfrom,True) # Returns information about the move performed
                 player2.update_dead(tmp) # Handles if move performed involved capturing
             else:
                 check = "ply2" # Player 2s Turn
-                tmp = player2.move(selected, moveto, gameboard.board,taken,lastmove,movedfrom) # Returns information about the move performed
+                tmp = player2.move(selected, moveto, gameboard.board,taken,lastmove,movedfrom,True) # Returns information about the move performed
                 player1.update_dead(tmp) # Handles if move performed involved capturing
 
             # update the position of the player's pieces
