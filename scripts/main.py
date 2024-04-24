@@ -41,6 +41,7 @@ def draw_board(surface: pygame.Surface, turn: int) -> None:
 def draw_selected(
     surface: pygame.Surface, posgrid: PosType, color : str
 ) -> None:
+    # Draw rectangle outline around the square to show it has been selected
     pygame.draw.rect(
         surface,
         color,
@@ -49,7 +50,7 @@ def draw_selected(
             TILE_SIZE[0], TILE_SIZE[1],
         ),
         3
-    ) # Draw rectangle outline around the square to show it has been selected
+    )
 
 
 def draw_player(surface: pygame.Surface, player: Player) -> None:
@@ -107,7 +108,6 @@ def select_piece(
     return False
 
 
-
 def copy_board(board: BoardType) -> BoardType:
     copy: BoardType = [[0 for _ in range(10)] for _ in range(10)] # Initializes a new 10 x 10 matrix with 0s
     for i in range(10):
@@ -118,7 +118,6 @@ def copy_board(board: BoardType) -> BoardType:
 
 def clear() -> None:
     os.system("cls") # Clear the contents of the terminal
-
 
 
 def print_score(ply1: Player, ply2: Player) -> None:
